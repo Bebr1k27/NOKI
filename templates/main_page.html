@@ -11,16 +11,18 @@
     <header>
             <div class="logo">
                 <div class="logo-icon">
-                    <!--<i class="fas fa-lightbulb"></i>-->
-                    <img src="/logo.png" style="width: 50px;">
+                    <a href="/"><img src="/logo.png" style="width: 50px;"></a>
                 </div>
-                <div style="">
+                <div class="hide-on-mobile">
                     <div class="logo-text"><a href="/" style="color: white;">НОКИ</a></div>
                     <div class="logo-subtext">Новое общество креативных инициатив</div>
                 </div>
             </div>
         <div class="container header-container">
-            <nav>
+          <div class="burger-menu" id="burger-menu">
+              <i class="fas fa-bars"></i>
+          </div>
+            <nav class="desktop-nav">
                 <ul>
                     <li><a href="/" class="cur">О нас</a></li>
                     <li><a href="/history">История</a></li>
@@ -31,6 +33,25 @@
             </nav>
         </div>
     </header>
+
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <img src="/logo.png" style="width: 50px;">
+            </div>
+            <div class="close-btn" id="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <ul>
+            <li><a href="/" class="cur">О нас</a></li>
+            <li><a href="/history">История</a></li>
+            <li><a href="/departments">Региональные отделения</a></li>
+            <li><a href="/activities">Активности</a></li>
+            <li><a href="/login" class="btn mobile-btn">{{ usname }}</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
 
     <section class="hero">
         <div class="container">
@@ -54,7 +75,7 @@
                 <h2>Чем мы занимаемся?</h2>
             </div>
 
-            <div class="content-card">
+            <div class="content-card" id="q1">
                     <p>Наша миссия — поддержка и развитие креативного потенциала молодёжи через различные мероприятия, мастер-классы, тренинги и творческие площадки. Мы создаём пространство для обмена идеями, общения и сотрудничества, где молодые люди могут находить единомышленников, учиться и делиться опытом.</p>
             </div>
 
@@ -113,27 +134,29 @@
                 <div class="footer-column">
                     <h3>О движении</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Наша миссия</a></li>
-                        <li><a href="#">Команда</a></li>
-                        <li><a href="#">История</a></li>
-                        <li><a href="#">Партнёры</a></li>
+                        <li><a href="/#q1">Наша миссия</a></li>
+                        <!--<li><a href="#">Команда</a></li> Тут должен был быть раздел с контактами, но на
+                        оригинальном сайте он пустой, так что я его просто не стал писать-->
+                        <li><a href="/history">История</a></li>
+                        <li><a href="https://t.me/HoKi_russia">Подать заявку</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-column">
                     <h3>Мероприятия</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Календарь событий</a></li>
-                        <li><a href="#">Архив мероприятий</a></li>
+                        <!--<li><a href="#">Календарь событий</a></li>
+                        <li><a href="#">Архив мероприятий</a></li> Это тоже было бы круто заполнить, но для этого мне
+                        тоже нужна дополнительная информация-->
+                        <li><a href="/activities">Мероприятия</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-column">
                     <h3>Проекты</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Текущие проекты</a></li>
-                        <li><a href="#">Конкурсы</a></li>
-                        <li><a href="#">Подать заявку</a></li>
+                        <li><a href="/activities">Текущие проекты</a></li>
+                        <li><a href="/activities">Конкурсы</a></li>
                     </ul>
                 </div>
 
@@ -152,5 +175,6 @@
             </div>
         </div>
     </footer>
+    <script src="/script"></script>
 </body>
 </html>

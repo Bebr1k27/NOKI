@@ -77,5 +77,13 @@ def img2():
 def img3():
     return send_file("images/img3.png")
 
+@app.route("/mobile")
+def mobile_test():
+    return section("mobile_test")
+
+@app.route("/script")
+def script():
+    return send_file("script.js")
+
 if __name__ == "__main__":
-    app.run("0.0.0.0", port=80)
+    app.run("0.0.0.0", port=5000)

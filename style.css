@@ -386,13 +386,13 @@ a {
     margin-bottom: 20px;
 }
 
-.dodep {
+/*.dodep {
     margin: 30px;
     background: white;
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    /* margin-bottom: 40px; */
+    /* margin-bottom: 40px;
     margin-bottom: 0px;
     transition: var(--transition);
     width: 25%;
@@ -414,7 +414,7 @@ a {
 
 .dodep a {
     color: rgba(161,0,78,1);
-}
+} */
 
 .event {
     background: white;
@@ -732,5 +732,107 @@ a {
     .btn {
         padding: 10px 20px;
         font-size: 0.9rem;
+    }
+}
+
+.dep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.dodep {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: var(--transition);
+    margin-bottom: 0;
+}
+
+.dodep:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.dodep h3 {
+    margin-bottom: 15px;
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+.dodep ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.dodep li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.dodep li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+}
+
+.dodep a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.dodep a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* Адаптация для разных экранов */
+@media (max-width: 1200px) {
+    .dep-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .dep-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .dodep {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dep-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+        gap: 15px;
+        margin: 20px auto;
+    }
+
+    .dodep {
+        padding: 15px;
+    }
+
+    .dodep h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dep-grid {
+        padding: 0 15px;
+    }
+
+    .dodep h3 {
+        font-size: 1.2rem;
     }
 }

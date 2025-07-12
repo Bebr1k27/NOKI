@@ -50,13 +50,23 @@
             <li><a href="/history">История</a></li>
             <li><a href="/departments">Региональные отделения</a></li>
             <li><a href="/activities">Активности</a></li>
-            <li><a href="/login" class="btn mobile-btn">{{ usname }}</a></li>
+            <li><a href="/profle" class="btn mobile-btn">{{ usname }}</a></li>
         </ul>
     </div>
     <div class="overlay" id="overlay"></div>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <!-- Auth Container -->
     <section class="auth-container">
+        <div class="flash-messages">
+        </div>
         <div class="container">
           <center>
             <div class="auth-wrapper">
@@ -101,12 +111,22 @@
                     </form>
 
                     <!-- Форма регистрации -->
-                    <form id="registerForm" class="auth-form">
+                    <form id="registerForm" class="auth-form" method="POST" action="/register">
                         <div id="registerMessage" class="auth-message"></div>
 
                         <div class="form-group">
-                            <label for="fullName">ФИО</label>
-                            <input type="text" id="fullName" name="fullName" required>
+                            <label for="firstName">Имя</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Фамилия</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Логин</label>
+                            <input type="text" id="username" name="username" required>
                         </div>
 
                         <div class="form-group">
@@ -135,8 +155,20 @@
                             <input type="date" id="birthdate" name="birthdate" required>
                         </div>
 
+                        <!--<div class="form-group">
+                            <label for="department">Отделение</label>
+                            <select id="department" name="department" required>
+                                <option value="">Выберите отделение</option>
+                                <option value="Москва">Москва</option>
+                                <option value="Санкт-Петербург">Санкт-Петербург</option>
+                                <option value="Новосибирск">Новосибирск</option>
+                                <option value="Екатеринбург">Екатеринбург</option>
+                                <option value="Казань">Казань</option>
+                            </select>
+                        </div>-->
+
                         <div class="form-group">
-                            <button type="submit" class="btn btn-block">Зарегистрироваться</button>
+                            <input type="submit" value="Зарегистрироваться" class="btn btn-block">
                         </div>
 
                         <div class="auth-links">
@@ -236,45 +268,40 @@
         // Обработка отправки форм
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             // e.preventDefault();
-            const message = document.getElementById('loginMessage');
-            message.textContent = 'Вход выполнен успешно!';
-            message.className = 'auth-message success';
-            message.style.display = 'block';
+            //const message = document.getElementById('loginMessage');
+            //message.textContent = 'Вход выполнен успешно!';
+            //message.className = 'auth-message success';
+            //message.style.display = 'block';
 
             // Здесь будет реальная аутентификация
             // setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
         });
 
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const message = document.getElementById('registerMessage');
+        // Обработка отправки формы регистрации
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const message = document.getElementById('registerMessage');
 
-            // Простая проверка паролей
-            if (regPassword.value !== confirmPassword.value) {
-                message.textContent = 'Пароли не совпадают!';
-                message.className = 'auth-message error';
-                message.style.display = 'block';
-                return;
-            }
+    // Простая проверка паролей
+    if (regPassword.value !== confirmPassword.value) {
+        e.preventDefault(); // Отменяем отправку формы
+        message.textContent = 'Пароли не совпадают!';
+        message.className = 'auth-message error';
+        message.style.display = 'block';
+        return;
+    }
 
-            message.textContent = 'Регистрация прошла успешно!';
-            message.className = 'auth-message success';
-            message.style.display = 'block';
+    // Если проверка пройдена - форма отправится
+});
 
-            // Здесь будет реальная регистрация
-            // setTimeout(() => { tabs[0].click(); }, 1500);
-        });
-
-        document.getElementById('recoveryForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const message = document.getElementById('recoveryMessage');
-            message.textContent = 'Инструкции по восстановлению отправлены на ваш email!';
-            message.className = 'auth-message success';
-            message.style.display = 'block';
-
-            // Здесь будет реальное восстановление
-            setTimeout(() => { tabs[0].click(); }, 3000);
-        });
+// Обработка восстановления пароля
+document.getElementById('recoveryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const message = document.getElementById('recoveryMessage');
+    message.textContent = 'Инструкции по восстановлению отправлены на ваш email!';
+    message.className = 'auth-message success';
+    message.style.display = 'block';
+    setTimeout(() => { tabs[0].click(); }, 3000);
+});
     </script>
     <script src="/script"></script>
 </body>

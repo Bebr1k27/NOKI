@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль | НОКИ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/profile_style.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">
+                <a href="/"><img src="/logo.png" style="width: 50px;"></a>
+            </div>
+            <div class="hide-on-mobile">
+                <div class="logo-text"><a href="/" style="color: white;">НОКИ</a></div>
+                <div class="logo-subtext">Новое общество креативных инициатив</div>
+            </div>
+        </div>
+        <div class="container header-container">
+            <div class="burger-menu" id="burger-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/">О нас</a></li>
+                    <li><a href="/history">История</a></li>
+                    <li><a href="/departments">Региональные отделения</a></li>
+                    <li><a href="/activities">Активности</a></li>
+                    <li>
+                        <div class="user-dropdown">
+                            <button class="btn user-btn">{{ usname }} <i class="fas fa-caret-down"></i></button>
+                            <div class="dropdown-content">
+                                <a href="/profile">Профиль</a>
+                                <a href="/settings">Настройки</a>
+                                <a href="/logout">Выйти</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <img src="/logo.png" style="width: 50px;">
+            </div>
+            <div class="close-btn" id="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <ul>
+            <li><a href="/">О нас</a></li>
+            <li><a href="/history">История</a></li>
+            <li><a href="/departments">Региональные отделения</a></li>
+            <li><a href="/activities">Активности</a></li>
+            <li><a href="/profile" class="btn mobile-btn">{{ usname }}</a>
+                <ul class="mobile-submenu">
+                    <li><a href="/settings">Настройки</a></li>
+                    <li><a href="/logout">Выйти</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="profile-container">
+        <div class="container">
+            <div class="profile-header">
+                <div style="display: flex;">
+                    <div class="activity-icon" style="margin-top: auto; margin-bottom: auto; margin-right: 15px;">
+                        {% if activity.status == 'active' %}
+                            <i class="fas fa-running"></i>
+                        {% elif activity.status == 'completed' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif activity.status == 'planned' %}
+                            <i class="fas fa-calendar-plus"></i>
+                        {% endif %}
+                    </div>
+                    <h1>{{ activity.name }}</h1>
+                    <!--<p style="margin-left: auto;">{{ activity.date }}</p>-->
+                </div>
+            </div>
+            <div class="profile-content">
+                <div class="profile-section">
+                  <form method="post">
+                    {% for item in text %}
+                      <div class="form-group">
+                          <label>{{ item }}</label>
+                          {% if text[item] == "str" %}
+                          <input type="text" id="{{ item }}" name="{{ item }}" required />
+                          {% elif text[item] == "int" %}
+                          <input type="number" id="{{ item }}" name="{{ item }}" required />
+                          {% elif text[item] == "email" %}
+                          <input type="email" id="{{ item }}" name="{{ item }}" required />
+                          {% elif text[item] == "departament" %}
+                          <select id="department" name="department" required>
+                                <option value="">Выберите ваш регион</option>
+                                <option value="Москва">Москва</option>
+                                <option value="Санкт-Петербург">Санкт-Петербург</option>
+                                <option value="Новосибирск">Новосибирск</option>
+                                <option value="Екатеринбург">Екатеринбург</option>
+                                <option value="Казань">Казань</option>
+                            </select>
+                          {% elif text[item] == "bool" %}
+                          <input type="checkbox" id="{{ item }}" name="{{ item }}" required />
+                          {% elif text[item] == "url" %}
+                          <input type="url" id="{{ item }}" name="{{ item }}" required />
+                          {% endif %}
+                      </div>
+                    {% endfor %}
+                      <input type="submit" value="Отправить заявку" class="btn">
+                      <input type="reset" value="Очистить форму" class="btn">
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('burger-menu').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        });
+
+        document.getElementById('close-nav').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.remove('active');
+            this.classList.remove('active');
+        });
+
+        const userBtn = document.querySelector('.user-btn');
+        if (userBtn) {
+            userBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = this.nextElementSibling;
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            window.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            });
+        }
+    </script>
+    <script>
+    // Управление модальным окном
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+
+    if (editProfileBtn && editProfileModal) {
+        editProfileBtn.addEventListener('click', () => {
+            editProfileModal.style.display = 'block';
+        });
+
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editProfileModal.style.display = 'none';
+            });
+        });
+
+        // Закрытие при клике вне модального окна
+        window.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+        });
+    }
+</script>
+    <script src="/script"></script>
+</body>
+</html>

@@ -486,3 +486,146 @@
     margin-right: 8px;
     width: 20px;
 }
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.form-group input[type="checkbox"] {
+    width: auto;
+    transform: scale(1.5);
+    margin-right: 10px;
+}
+
+.form-builder {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.field-item {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    align-items: center;
+}
+
+.field-inputs {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.field-inputs input, .field-inputs select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.remove-field {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+#add-field {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#create-activity {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.notification {
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    display: none;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.participant-list {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease;
+}
+
+.participant-list.collapsed {
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: none;
+}
+
+.participant-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-participant-form {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border-radius: 5px;
+}

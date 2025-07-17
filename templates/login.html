@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/login_style.css">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: "/regions",
+                type: "GET",
+                success: function(response){
+                    let listHtml = '';
+                    $.each(response, function(index, item){
+                        // listHtml += '<option value="' + item + '">' item + '</option>';
+                        listHtml += '<option>' + item + '</option>';
+                    });
+                    listHtml += '';
+                    $("#test").html(listHtml);
+                }
+            });
+        });
+    </script>-->
 </head>
 <body>
     <!-- Header -->
@@ -155,17 +173,15 @@
                             <input type="date" id="birthdate" name="birthdate" required>
                         </div>
 
-                        <!--<div class="form-group">
+                        <div class="form-group">
                             <label for="department">Отделение</label>
                             <select id="department" name="department" required>
                                 <option value="">Выберите отделение</option>
-                                <option value="Москва">Москва</option>
-                                <option value="Санкт-Петербург">Санкт-Петербург</option>
-                                <option value="Новосибирск">Новосибирск</option>
-                                <option value="Екатеринбург">Екатеринбург</option>
-                                <option value="Казань">Казань</option>
+                                {% for item in regions %}
+                                <option value="{{ item }}">{{ regions[item] }}</option>
+                                {% endfor %}
                             </select>
-                        </div>-->
+                        </div>
 
                         <div class="form-group">
                             <input type="submit" value="Зарегистрироваться" class="btn btn-block">

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать мероприятие | НОКИ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/profile_style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">
+                <a href="/"><img src="/logo.png" style="width: 50px;"></a>
+            </div>
+            <div class="hide-on-mobile">
+                <div class="logo-text"><a href="/" style="color: white;">НОКИ</a></div>
+                <div class="logo-subtext">Новое общество креативных инициатив</div>
+            </div>
+        </div>
+        <div class="container header-container">
+            <div class="burger-menu" id="burger-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/">О нас</a></li>
+                    <li><a href="/history">История</a></li>
+                    <li><a href="/departments">Региональные отделения</a></li>
+                    <li><a href="/activities">Активности</a></li>
+                    <li>
+                        <div class="user-dropdown">
+                            <button class="btn user-btn">{{ usname }} <i class="fas fa-caret-down"></i></button>
+                            <div class="dropdown-content">
+                                <a href="/profile">Профиль</a>
+                                <a href="/settings">Настройки</a>
+                                <a href="/logout">Выйти</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="form-builder">
+        <h1>Создать мероприятие</h1>
+        <div class="notification" id="notification"></div>
+        <div class="form-group">
+            <label for="activity-name">Название мероприятия</label>
+            <input type="text" id="activity-name" required>
+        </div>
+        <div class="form-group">
+            <label>Поля регистрации:</label>
+            <div id="fields-container">
+                <!-- Поля будут добавляться сюда динамически -->
+            </div>
+            <button type="button" id="add-field" class="btn">
+                <i class="fas fa-plus"></i> Добавить поле
+            </button>
+        </div>
+
+        <button id="create-activity" class="btn">Создать мероприятие</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fieldsContainer = document.getElementById('fields-container');
+            const addFieldBtn = document.getElementById('add-field');
+            const createBtn = document.getElementById('create-activity');
+            const notification = document.getElementById('notification');
+
+            // Типы полей и их названия
+            const fieldTypes = {
+                'str': 'Текстовое поле',
+                'int': 'Числовое поле',
+                'email': 'Email',
+                'departament': 'Выбор отделения',
+                'bool': 'Флажок',
+                'url': 'Ссылка'
+            };
+
+            // Добавление нового поля
+            function addField() {
+                const fieldId = Date.now(); // Уникальный ID
+                const fieldHtml = `
+                    <div class="field-item" id="field-${fieldId}">
+                        <div class="field-inputs">
+                            <input type="text" placeholder="Название поля" class="field-label">
+                            <select class="field-type">
+                                ${Object.entries(fieldTypes).map(([value, text]) =>
+                                    `<option value="${value}">${text}</option>`).join('')}
+                            </select>
+                        </div>
+                        <button class="remove-field" onclick="removeField(${fieldId})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+
+                fieldsContainer.insertAdjacentHTML('beforeend', fieldHtml);
+            }
+
+            // Удаление поля
+            window.removeField = function(id) {
+                const fieldEl = document.getElementById(`field-${id}`);
+                if (fieldEl) fieldEl.remove();
+            };
+
+            // Обработчик создания мероприятия
+            createBtn.addEventListener('click', async function() {
+                const activityName = document.getElementById('activity-name').value.trim();
+
+                if (!activityName) {
+                    showNotification('Введите название мероприятия', 'error');
+                    return;
+                }
+
+                const fields = [];
+                const fieldItems = document.querySelectorAll('.field-item');
+
+                fieldItems.forEach(item => {
+                    const label = item.querySelector('.field-label').value.trim();
+                    const type = item.querySelector('.field-type').value;
+
+                    if (label) {
+                        fields.push({ label, type });
+                    }
+                });
+
+                if (fields.length === 0) {
+                    showNotification('Добавьте хотя бы одно поле', 'error');
+                    return;
+                }
+
+                // Формируем args для мероприятия
+                const args = {};
+                fields.forEach(field => {
+                    args[field.label] = field.type;
+                });
+
+                try {
+                    const response = await fetch('/admin_panel/create_form', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: activityName,
+                            args: args
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        showNotification('Мероприятие успешно создано!', 'success');
+                        resetForm();
+                    } else {
+                        showNotification(`Ошибка: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    showNotification('Ошибка сети', 'error');
+                }
+            });
+
+            // Показать уведомление
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+
+            // Сброс формы
+            function resetForm() {
+                document.getElementById('activity-name').value = '';
+                fieldsContainer.innerHTML = '';
+            }
+
+            // Инициализация - добавляем первое поле
+            addField();
+            addFieldBtn.addEventListener('click', addField);
+        });
+    </script>
+
+    <!-- Вставка footer и скриптов из примера -->
+    <script>
+        // ... ваш существующий JavaScript для меню ...
+    </script>
+</body>
+</html>

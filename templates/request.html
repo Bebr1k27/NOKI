@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление мероприятием | НОКИ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/profile_style.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style>
+        .participant-list {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .participant-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .participant-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .collapsed .participant-details {
+            display: none;
+        }
+        .toggle-btn {
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .add-participant-form {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Шапка сайта (аналогичная другим страницам) -->
+        <!-- ... -->
+    </header>
+
+    <div class="profile-container">
+        <div class="container">
+            <div class="profile-header">
+                <div style="display: flex;">
+                    <div class="activity-icon" style="margin-top: auto; margin-bottom: auto; margin-right: 15px;">
+                        {% if event.status == 'active' %}
+                            <i class="fas fa-running"></i>
+                        {% elif event.status == 'completed' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif event.status == 'planned' %}
+                            <i class="fas fa-calendar-plus"></i>
+                        {% endif %}
+                    </div>
+                    <h1>{{ event_name }}</h1>
+                </div>
+            </div>
+            <div class="profile-content">
+                <!-- Секция управления регистрацией -->
+                <div class="form-section">
+                    <h2>Статус регистрации</h2>
+                    <p>Регистрация:
+                        <strong>
+                            {% if event['Registration is open'] %}
+                                Открыта
+                            {% else %}
+                                Закрыта
+                            {% endif %}
+                        </strong>
+                    </p>
+                    <div class="action-buttons">
+                        <form method="POST" action="{{ url_for('toggle_registration', event_name=event_name) }}">
+                            <button type="submit" class="btn">
+                                {% if event['Registration is open'] %}
+                                    Закрыть регистрацию
+                                {% else %}
+                                    Открыть регистрацию
+                                {% endif %}
+                            </button>
+                        </form>
+                        <!--<a href="{{ url_for('edit_registration_form', event_name=event_name) }}" class="btn">
+                            Изменить форму регистрации
+                        </a>-->
+                    </div>
+                </div>
+
+                <!-- Секция списка участников -->
+                <div class="form-section">
+                    <h2>
+                        <span class="toggle-btn" onclick="toggleParticipants()">
+                            <i class="fas fa-chevron-down"></i>
+                        </span>
+                        Участники ({{ event['Number of participants'] }})
+                    </h2>
+
+                    <!--
+                    <div class="add-participant-form">
+                        <form method="POST" action="{{ url_for('add_participant', event_name=event_name) }}">
+                            <label for="user_id">Добавить участника по ID:</label>
+                            <input type="text" id="user_id" name="user_id" required>
+                            <button type="submit" class="btn">Добавить</button>
+                        </form>
+                    </div>-->
+
+                    <div class="participant-list" id="participantList">
+                        {% for participant_id, participant in participants %}
+                        <div class="participant-item">
+                            <div class="participant-details">
+                                <h3>{{ participant['ФИО участника'] }}</h3>
+                                <p>ID: {{ participant_id }} | Дата регистрации: {{ participant.date }}</p>
+                                <div class="info-grid">
+                                    {% for key, value in participant.items() %}
+                                        {% if key not in ['date', 'rank'] %}
+                                        <div class="info-item">
+                                            <label>{{ key }}</label>
+                                            <p>{{ value }}</p>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="participant-actions">
+                                <!--<a href="{{ url_for('profile', user_id=participant_id) }}" class="btn">
+                                    <i class="fas fa-eye"></i> Профиль
+                                </a>-->
+                                <form method="POST" action="{{ url_for('remove_participant', event_name=event_name, participant_id=participant_id) }}">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i> Удалить
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Секция формы регистрации -->
+                <div class="form-section">
+                    <h2>Текущая форма регистрации</h2>
+                    <div class="info-grid">
+                        {% for field, field_type in event.args.items() %}
+                        <div class="info-item">
+                            <label>{{ field }}</label>
+                            <p>{{ field_type }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для сворачивания/разворачивания списка участников
+        function toggleParticipants() {
+            const list = document.getElementById('participantList');
+            const btn = document.querySelector('.toggle-btn i');
+
+            if (list.classList.contains('collapsed')) {
+                list.classList.remove('collapsed');
+                btn.classList.remove('fa-chevron-right');
+                btn.classList.add('fa-chevron-down');
+            } else {
+                list.classList.add('collapsed');
+                btn.classList.remove('fa-chevron-down');
+                btn.classList.add('fa-chevron-right');
+            }
+        }
+
+        // Инициализация - сворачиваем список по умолчанию
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('participantList').classList.add('collapsed');
+        });
+    </script>
+<script>
+        document.getElementById('burger-menu').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        });
+
+        document.getElementById('close-nav').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('mobile-nav').classList.remove('active');
+            this.classList.remove('active');
+        });
+
+        const userBtn = document.querySelector('.user-btn');
+        if (userBtn) {
+            userBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = this.nextElementSibling;
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            window.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            });
+        }
+    </script>
+    <script>
+    // Управление модальным окном
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+
+    if (editProfileBtn && editProfileModal) {
+        editProfileBtn.addEventListener('click', () => {
+            editProfileModal.style.display = 'block';
+        });
+
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editProfileModal.style.display = 'none';
+            });
+        });
+
+        // Закрытие при клике вне модального окна
+        window.addEventListener('click', (e) => {
+            if (e.target === editProfileModal) {
+                editProfileModal.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>

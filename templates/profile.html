@@ -8,10 +8,9 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/profile_style.css">
     <link rel="icon" href="/favicon.ico">
-    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="logo">
             <div class="logo-icon">
@@ -148,8 +147,8 @@
                             <p>{{ user.email }}</p>
                         </div>
                         <div class="info-item">
-                            <label>Отделение</label>
-                            <p>{{ user.department }}</p>
+                            <label>Регион</label>
+                            <p>{{ regions[user.department] }}</p>
                         </div>
                         <div class="info-item">
                             <label>Социальная сеть</label>
@@ -196,6 +195,7 @@
                     {% if activities %}
                         <div class="activities-grid">
                             {% for activity in activities %}
+                            <a href="/activity/m/{{ activity['name'] }}">
                             <div class="activity-card">
                                 <div class="activity-icon">
                                     {% if activity.status == 'active' %}
@@ -208,14 +208,21 @@
                                 </div>
                                 <h3>{{ activity.name }}</h3>
                                 <p><i class="fas fa-clock"></i> {{ activity.date }}</p>
-                                <p><i class="fas fa-tasks"></i> {{ activity.work_name }}</p>
+                                <!--<p><i class="fas fa-tasks"></i> {{ activity.work_name }}</p>-->
+                                {% if activity.rank == 'participant' %}
+                                <p><i class="fas fa-tasks"></i>Участник</p>
+                                {% elif activity.rank == 'participant' %}
+                                <p><i class="fas fa-tasks"></i>Волонтёр</p>
+                                {% elif activity.rank == 'participant' %}
+                                <p><i class="fas fa-tasks"></i>Организатор</p>
+                                {% endif %}
                                 <!-- Статус мероприятия -->
                                 <div class="activity-status {{ activity.status }}">
                                     {% if activity.status == 'active' %}Активно{% endif %}
                                     {% if activity.status == 'completed' %}Завершено{% endif %}
                                     {% if activity.status == 'planned' %}Запланировано{% endif %}
                                 </div>
-                            </div>
+                            </div></a>
                             {% endfor %}
                         </div>
                     {% else %}

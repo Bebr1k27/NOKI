@@ -57,8 +57,29 @@
 </head>
 <body>
     <header>
-        <!-- Шапка сайта (аналогичная другим страницам) -->
-        <!-- ... -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <a href="/"><img src="/logo.png" style="width: 50px;"></a>
+                </div>
+                <div class="hide-on-mobile">
+                    <div class="logo-text"><a href="/" style="color: white;">НОКИ</a></div>
+                    <div class="logo-subtext">Новое общество креативных инициатив</div>
+                </div>
+            </div>
+        <div class="container header-container">
+          <div class="burger-menu" id="burger-menu">
+              <i class="fas fa-bars"></i>
+          </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/">О нас</a></li>
+                    <li><a href="/history">История</a></li>
+                    <li><a href="/departments">Региональные отделения</a></li>
+                    <li><a href="/activities">Активности</a></li>
+                    <li><a href="/login" class="btn">{{ usname }}</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <div class="profile-container">
@@ -171,6 +192,54 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>О движении</h3>
+                    <ul class="footer-links">
+                        <li><a href="/#q1">Наша миссия</a></li>
+                        <!--<li><a href="#">Команда</a></li> Тут должен был быть раздел с контактами, но на
+                        оригинальном сайте он пустой, так что я его просто не стал писать-->
+                        <li><a href="/history">История</a></li>
+                        <li><a href="https://t.me/HoKi_russia">Подать заявку</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Мероприятия</h3>
+                    <ul class="footer-links">
+                        <!--<li><a href="#">Календарь событий</a></li>
+                        <li><a href="#">Архив мероприятий</a></li> Это тоже было бы круто заполнить, но для этого мне
+                        тоже нужна дополнительная информация-->
+                        <li><a href="/activities">Мероприятия</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Проекты</h3>
+                    <ul class="footer-links">
+                        <li><a href="/activities">Текущие проекты</a></li>
+                        <li><a href="/activities">Конкурсы</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hoki_russia@mail.ru">hoki_russia@mail.ru</a></li>
+                        <li>г. Нижний Тагил, 622049</li>
+                        <li><a href="#">Личный кабинет</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; 2025 Молодёжное движение НОКИ. Все права защищены.
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Функция для сворачивания/разворачивания списка участников

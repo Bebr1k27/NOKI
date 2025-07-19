@@ -316,11 +316,9 @@
                 <div class="form-group">
                     <label for="editDepartment">Отделение</label>
                     <select id="editDepartment" name="department" required>
-                        <option value="Москва" {% if user.department == 'Москва' %}selected{% endif %}>Москва</option>
-                        <option value="Санкт-Петербург" {% if user.department == 'Санкт-Петербург' %}selected{% endif %}>Санкт-Петербург</option>
-                        <option value="Новосибирск" {% if user.department == 'Новосибирск' %}selected{% endif %}>Новосибирск</option>
-                        <option value="Екатеринбург" {% if user.department == 'Екатеринбург' %}selected{% endif %}>Екатеринбург</option>
-                        <option value="Казань" {% if user.department == 'Казань' %}selected{% endif %}>Казань</option>
+                        {% for item in regions %}
+                        <option value="{{ item }}" {% if user.department == regions[item] %}selected{% endif %}>{{ regions[item] }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 

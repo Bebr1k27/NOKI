@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор карточек мероприятий</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/profile_style.css">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        Ъ
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .constructor {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .preview {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-generate {
+            background: var(--secondary);
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .btn-reset {
+            background: #95a5a6;
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .btn-reset:hover {
+            background: #7f8c8d;
+        }
+
+        .event {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+
+        .event-img {
+            width: 40%;
+            min-height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .event-content {
+            padding: 25px;
+            width: 60%;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .event-description {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .event-btn {
+            font-size: 1rem;
+            padding: 10px 25px;
+        }
+
+        .generated-code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow: auto;
+            display: none;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-copy {
+            background: #3498db;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-copy:hover {
+            background: #2980b9;
+        }
+
+        .server-url-container {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .send-section {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .send-section input {
+            flex: 1;
+        }
+
+        .btn-send {
+            background: var(--success);
+            padding: 12px 20px;
+            white-space: nowrap;
+        }
+
+        .response-container {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success-response {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-response {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .instructions {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .instructions h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .event {
+                flex-direction: column;
+            }
+
+            .event-img, .event-content {
+                width: 100%;
+            }
+
+            .hero {
+                padding: 60px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .form-actions, .send-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <a href="/"><img src="/logo.png" style="width: 50px;"></a>
+                </div>
+                <div class="hide-on-mobile">
+                    <div class="logo-text"><a href="/" style="color: white;">НОКИ</a></div>
+                    <div class="logo-subtext">Новое общество креативных инициатив</div>
+                </div>
+            </div>
+        <div class="container header-container">
+          <div class="burger-menu" id="burger-menu">
+              <i class="fas fa-bars"></i>
+          </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/">О нас</a></li>
+                    <li><a href="/history">История</a></li>
+                    <li><a href="/departments">Региональные отделения</a></li>
+                    <li><a href="/activities">Активности</a></li>
+                    <li><a href="/login" class="btn">{{ usname }}</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Конструктор карточек мероприятий</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="instructions">
+            <h2>Как использовать конструктор</h2>
+            <ol>
+                <li>Заполните все поля формы в левой части страницы</li>
+                <li>Нажмите кнопку "Сгенерировать карточку"</li>
+                <li>Ваша карточка появится в разделе предпросмотра</li>
+                <li>Скопируйте HTML-код или отправьте его на сервер</li>
+                <li>Для создания новой карточки нажмите "Очистить форму"</li>
+            </ol>
+            <p>Карточки автоматически сохраняют стиль и структуру мероприятий НОКИ.</p>
+        </div>
+
+        <div class="main-container">
+            <div class="constructor">
+                <h2 class="section-title">Создание мероприятия</h2>
+                <form id="event-form">
+                    <div class="form-group">
+                        <label for="event-title">Название мероприятия</label>
+                        <input type="text" id="event-title" placeholder="Введите название" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="event-description">Описание мероприятия</label>
+                        <textarea id="event-description" placeholder="Подробно опишите мероприятие..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="event-image">URL изображения</label>
+                        <input type="text" id="event-image" placeholder="https://example.com/image.jpg" required>
+                        <small>Можно использовать прямую ссылку на изображение</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="event-button-text">Текст кнопки</label>
+                        <input type="text" id="event-button-text" placeholder="Принять участие" value="Принять участие">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="event-button-url">URL кнопки</label>
+                        <input type="text" id="event-button-url" placeholder="https://example.com/form">
+                        <small>Оставьте пустым, если кнопка не нужна</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-generate">
+                            <i class="fas fa-magic"></i> Сгенерировать карточку
+                        </button>
+                        <button type="reset" class="btn btn-reset">
+                            <i class="fas fa-redo"></i> Очистить форму
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview">
+                <h2 class="section-title">Предпросмотр</h2>
+                <div id="event-preview">
+                    <div class="event">
+                        <div class="event-img">Изображение мероприятия</div>
+                        <div class="event-content">
+                            <h3 class="event-title">Пример мероприятия</h3>
+                            <p class="event-description">Заполните форму слева, чтобы создать свою карточку мероприятия. После заполнения всех полей нажмите кнопку "Сгенерировать карточку".</p>
+                            <a href="#" class="btn event-btn">Принять участие</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="server-url-container">
+                    <h3>Отправка на сервер</h3>
+                    <div class="send-section">
+                        <button class="btn" id="send-button">
+                            <i class="fas fa-paper-plane"></i> Отправить
+                        </button>
+                    </div>
+
+                    <div id="response-container" class="response-container">
+                        <p id="response-message"></p>
+                    </div>
+                </div>
+
+                <div id="generated-code-container" class="generated-code">
+                    <div class="code-header">
+                        <h3>HTML-код карточки</h3>
+                        <button class="btn-copy" id="copy-button">
+                            <i class="fas fa-copy"></i> Копировать
+                        </button>
+                    </div>
+                    <div id="generated-code"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>О движении</h3>
+                    <ul class="footer-links">
+                        <li><a href="/#q1">Наша миссия</a></li>
+                        <li><a href="/history">История</a></li>
+                        <li><a href="https://t.me/HoKi_russia">Подать заявку</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Мероприятия</h3>
+                    <ul class="footer-links">
+                        <li><a href="/activities">Мероприятия</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Проекты</h3>
+                    <ul class="footer-links">
+                        <li><a href="/activities">Текущие проекты</a></li>
+                        <li><a href="/activities">Конкурсы</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hoki_russia@mail.ru">hoki_russia@mail.ru</a></li>
+                        <li>г. Нижний Тагил, 622049</li>
+                        <li><a href="#">Личный кабинет</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; 2025 Молодёжное движение НОКИ. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('event-form');
+            const previewContainer = document.getElementById('event-preview');
+            const generatedCodeContainer = document.getElementById('generated-code');
+            const codeContainer = document.getElementById('generated-code-container');
+            const copyButton = document.getElementById('copy-button');
+            const sendButton = document.getElementById('send-button');
+            const serverUrlInput = document.getElementById('server-url');
+            const responseContainer = document.getElementById('response-container');
+            const responseMessage = document.getElementById('response-message');
+
+            // Переменные для хранения данных
+            let currentCardHtml = '';
+            let currentCleanCode = '';
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Получаем значения из формы
+                const title = document.getElementById('event-title').value;
+                const description = document.getElementById('event-description').value;
+                const imageUrl = document.getElementById('event-image').value;
+                const buttonText = document.getElementById('event-button-text').value;
+                const buttonUrl = document.getElementById('event-button-url').value;
+
+                // Генерируем HTML для карточки
+                currentCardHtml = `
+                    <div class='event'>
+                        <img src='${imageUrl}' class='event-img'>
+                        <div class='event-content'>
+                            <h1 class='event-title'>${title}</h1>
+                            <p class='event-description'>${description}</p>
+                            ${buttonUrl ? `<a href='${buttonUrl}' class='btn event-btn'>${buttonText}</a>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Обновляем предпросмотр
+                previewContainer.innerHTML = currentCardHtml;
+
+                // Генерируем чистый HTML-код
+                currentCleanCode = `
+<section class='event'>
+    <img src='${imageUrl}' class='event-img'>
+    <div class='event-content'>
+        <h1 class='event-title'>${title}</h1>
+        <p class='event-description'>${description}</p>
+        ${buttonUrl ? `<a href='${buttonUrl}' class='btn event-btn'>${buttonText}</a>` : ''}
+    </div>
+</section>
+                `.trim();
+
+                // Показываем код
+                generatedCodeContainer.textContent = currentCleanCode;
+                codeContainer.style.display = 'block';
+
+                // Прокручиваем к коду
+                codeContainer.scrollIntoView({ behavior: 'smooth' });
+
+                // Сбрасываем ответ сервера
+                hideResponse();
+            });
+
+            // Копирование кода
+            copyButton.addEventListener('click', function() {
+                const textArea = document.createElement('textarea');
+                textArea.value = currentCleanCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                // Анимация подтверждения
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+                copyButton.style.backgroundColor = '#27ae60';
+
+                setTimeout(() => {
+                    copyButton.innerHTML = originalText;
+                    copyButton.style.backgroundColor = '#3498db';
+                }, 2000);
+            });
+
+            // Сброс формы
+            form.addEventListener('reset', function() {
+                previewContainer.innerHTML = `
+                    <div class="event">
+                        <div class='event-img'>Изображение мероприятия</div>
+                        <div class='event-content'>
+                            <h3 class='event-title'>Пример мероприятия</h3>
+                            <p class='event-description'>Заполните форму слева, чтобы создать свою карточку мероприятия. После заполнения всех полей нажмите кнопку "Сгенерировать карточку".</p>
+                            <a href='#' class="btn event-btn">Принять участие</a>
+                        </div>
+                    </div>
+                `;
+                codeContainer.style.display = 'none';
+                hideResponse();
+            });
+
+            // Отправка данных на сервер
+            sendButton.addEventListener('click', function() {
+                if (!currentCleanCode) {
+                    showResponse('Сначала сгенерируйте карточку мероприятия', 'error');
+                    return;
+                }
+
+                const serverUrl = '/admin_panel/getter';
+                if (!serverUrl) {
+                    showResponse('Введите URL сервера для отправки', 'error');
+                    return;
+                }
+
+                // Показываем индикатор загрузки
+                const originalText = sendButton.innerHTML;
+                sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                sendButton.disabled = true;
+
+                // Формируем данные для отправки
+                const data = {
+                    //html_code: currentCleanCode,
+                    event_data: {
+                        title: document.getElementById('event-title').value,
+                        description: document.getElementById('event-description').value,
+                        image_url: document.getElementById('event-image').value,
+                        button_text: document.getElementById('event-button-text').value,
+                        button_url: document.getElementById('event-button-url').value
+                    }
+                };
+
+                // Отправляем POST-запрос
+                fetch(serverUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Сервер вернул ошибку');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showResponse('Карточка успешно отправлена на сервер!', 'success');
+                })
+                .catch(error => {
+                    console.error('Ошибка отправки:', error);
+                    showResponse(`Ошибка отправки: ${error.message}`, 'error');
+                })
+                .finally(() => {
+                    // Восстанавливаем кнопку
+                    sendButton.innerHTML = originalText;
+                    sendButton.disabled = false;
+                });
+            });
+
+            // Функции для работы с ответами
+            function showResponse(message, type) {
+                responseMessage.textContent = message;
+                responseContainer.className = 'response-container';
+                responseContainer.classList.add(`${type}-response`);
+                responseContainer.style.display = 'block';
+            }
+
+            function hideResponse() {
+                responseContainer.style.display = 'none';
+            }
+
+            // Инициализация демо-данных
+            document.getElementById('event-title').value = 'Добро вокруг нас';
+            document.getElementById('event-description').value = 'Твоя задача — заполнить эту форму до 29 июня и делиться с подписчиками своими добрыми делами: выкладывай до 10 августа посты о своих волонтёрских акциях в ВК и Telegram с фото и текстовой подводкой';
+            document.getElementById('event-image').value = '/img2';
+            document.getElementById('event-button-text').value = 'Принять участие';
+            document.getElementById('event-button-url').value = '/activity/r/Добро вокруг нас';
+        });
+    </script>
+</body>
+</html>

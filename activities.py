@@ -210,6 +210,31 @@ def add_user_to_cativity(name: str, uid: int | str, user_data: dict):
     except Exception as e:
         return str(e)
 
+def show_activity(activity_data: dict):
+    try:
+        activity_data = activity_data["event_data"]
+        f = open("shown_activities.json", "r", encoding="utf-8")
+        data = json.load(f)
+        f.close()
+        data[activity_data["title"]] = activity_data
+        f = open("shown_activities.json", "w", encoding="utf-8")
+        json.dump(data, f)
+        f.close()
+    except Exception as e:
+        return f"Err: {e}"
+
+def parse_shown_activities():
+    try:
+        f = open("shown_activities.json", 'r', encoding="utf-8")
+        data = json.load(f)
+        f.close()
+        items = []
+        for i in data:
+            items.append(data[i])
+        return items
+    except Exception as e:
+        return f"Err: {e}"
+
 if __name__ == "__main__":
     # write_activity("test_activity", 1, {
     #     "work name": "Влияние --- на ---- в городской среде",

@@ -66,7 +66,9 @@ def departments():
 
 @app.route("/activities")
 def activities():
-    return section("activities")
+    name = session.get('user_fullname', 'Войти')
+    acts = parse_shown_activities()
+    return render_template("activities.html", usname=name, items=acts)
 
 @app.route("/img2")
 def img2():
@@ -631,7 +633,6 @@ def admin_change_role():
         flash('Доступ запрещен', 'error')
         return redirect(url_for('login_page'))
 
-    # Проверка прав текущего пользователя (только админы)
     current_user = User.query.get(session['user_id'])
     if not current_user or current_user.role < 2:
         flash("Недостаточно прав", "error")
@@ -644,12 +645,9 @@ def admin_change_role():
         flash('Некорректные данные', 'error')
         return redirect(url_for('admin_panel'))
 
-    # Проверка допустимости роли
     if new_role not in (0, 1, 2):
         flash('Недопустимая роль', 'error')
         return redirect(url_for('admin_panel'))
-
-    # Изменение роли
     user = User.query.get(user_id)
     if not user:
         flash('Пользователь не найден', 'error')
@@ -664,6 +662,39 @@ def admin_change_role():
         flash(f'Ошибка при изменении роли: {str(e)}', 'error')
 
     return redirect(url_for('admin_panel'))
+
+@app.route("/admin_panel/constructor", methods=["GET", "POST"])
+def constructor():
+    if 'user_id' not in session:
+        flash('Доступ запрещен', 'error')
+        return redirect(url_for('login_page'))
+
+    current_user = User.query.get(session['user_id'])
+    if not current_user or current_user.role < 2:
+        flash("Недостаточно прав", "error")
+        return redirect(url_for('admin_panel'))
+
+    if request.method == "GET":
+        return render_template("constructor2.html", usname=session["user_fullname"])
+    else:
+        return "1"
+
+@app.route("/admin_panel/getter", methods=["POST"])
+def getter():
+    if 'user_id' not in session:
+        flash('Доступ запрещен', 'error')
+        return redirect(url_for('login_page'))
+
+    current_user = User.query.get(session['user_id'])
+    if not current_user or current_user.role < 2:
+        flash("Недостаточно прав", "error")
+        return redirect(url_for('admin_panel'))
+
+    data = request.data.decode('utf-8')
+    event_data = json.loads(data)
+    print(event_data)
+    show_activity(event_data)
+    return jsonify({"Ok": "Ok"})
 
 if __name__ == '__main__':
     app.run(debug=True)

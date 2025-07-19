@@ -60,6 +60,17 @@
     </section>
     <div class="spacer"></div>
 
+    {% for item in items %}
+    <section class="event">
+        <img src="{{ item['image_url'] }}" class="event-img">
+        <div class="event-content">
+            <h1 class="event-title">{{ item['title'] }}</h1>
+            <p class="event-description">{{ item['description'] }}</p>
+            <a href="{{ item['button_url'] }}" class="btn event-btn">{{ item['button_text'] }}</a>
+        </div>
+    </section>
+    {% endfor %}
+
     <section class="event">
       <img src="/img2" class="event-img">
       <div class="event-content">

@@ -103,11 +103,9 @@
                           {% elif text[item] == "departament" %}
                           <select id="department" name="department" required>
                                 <option value="">Выберите отделение</option>
-                                <option value="Москва">Москва</option>
-                                <option value="Санкт-Петербург">Санкт-Петербург</option>
-                                <option value="Новосибирск">Новосибирск</option>
-                                <option value="Екатеринбург">Екатеринбург</option>
-                                <option value="Казань">Казань</option>
+                                {% for item in regions %}
+                                <option value="{{ item }}">{{ regions[item] }}</option>
+                                {% endfor %}
                             </select>
                           {% elif text[item] == "bool" %}
                           <input type="checkbox" id="{{ item }}" required />

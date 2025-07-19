@@ -244,7 +244,6 @@ def profile():
         return redirect(url_for('login_page'))
 
     user_activities = get_user_activities(user.id)
-    print(user.department)
 
     return render_template(
         'profile.html',

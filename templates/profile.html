@@ -208,7 +208,6 @@
                                 </div>
                                 <h3>{{ activity.name }}</h3>
                                 <p><i class="fas fa-clock"></i> {{ activity.date }}</p>
-                                <!--<p><i class="fas fa-tasks"></i> {{ activity.work_name }}</p>-->
                                 {% if activity.rank == 'participant' %}
                                 <p><i class="fas fa-tasks"></i>Участник</p>
                                 {% elif activity.rank == 'participant' %}
@@ -216,7 +215,6 @@
                                 {% elif activity.rank == 'participant' %}
                                 <p><i class="fas fa-tasks"></i>Организатор</p>
                                 {% endif %}
-                                <!-- Статус мероприятия -->
                                 <div class="activity-status {{ activity.status }}">
                                     {% if activity.status == 'active' %}Активно{% endif %}
                                     {% if activity.status == 'completed' %}Завершено{% endif %}
@@ -317,7 +315,7 @@
                     <label for="editDepartment">Отделение</label>
                     <select id="editDepartment" name="department" required>
                         {% for item in regions %}
-                        <option value="{{ item }}" {% if user.department == regions[item] %}selected{% endif %}>{{ regions[item] }}</option>
+                        <option value="{{ item }}" {% if user.department == item %}selected{% endif %}>{{ regions[item] }}</option>
                         {% endfor %}
                     </select>
                 </div>

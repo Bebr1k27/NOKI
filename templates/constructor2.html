@@ -66,14 +66,7 @@
             margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        input, textarea {
+        textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -82,8 +75,8 @@
             transition: border 0.3s;
         }
 
-        input:focus, textarea:focus {
-            border-color: var(--secondary);
+        textarea:focus {
+            border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
@@ -115,50 +108,6 @@
 
         .btn-reset:hover {
             background: #7f8c8d;
-        }
-
-        .event {
-            display: flex;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            border: 1px solid #eee;
-        }
-
-        .event-img {
-            width: 40%;
-            min-height: 200px;
-            object-fit: cover;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .event-content {
-            padding: 25px;
-            width: 60%;
-        }
-
-        .event-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        .event-description {
-            margin-bottom: 20px;
-            color: #555;
-            line-height: 1.7;
-        }
-
-        .event-btn {
-            font-size: 1rem;
-            padding: 10px 25px;
         }
 
         .generated-code {
@@ -235,63 +184,6 @@
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-        }
-
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 50px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #ecf0f1;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.9rem;
-            color: #bdc3c7;
         }
 
         .instructions {
@@ -434,16 +326,6 @@
 
             <div class="preview">
                 <h2 class="section-title">Предпросмотр</h2>
-                <div id="event-preview">
-                    <div class="event">
-                        <div class="event-img">Изображение мероприятия</div>
-                        <div class="event-content">
-                            <h3 class="event-title">Пример мероприятия</h3>
-                            <p class="event-description">Заполните форму слева, чтобы создать свою карточку мероприятия. После заполнения всех полей нажмите кнопку "Сгенерировать карточку".</p>
-                            <a href="#" class="btn event-btn">Принять участие</a>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="server-url-container">
                     <h3>Отправка на сервер</h3>
@@ -466,6 +348,19 @@
                         </button>
                     </div>
                     <div id="generated-code"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions" style="background: #f8f9fa;">
+            <div id="event-preview">
+                <div class="event">
+                    <div class="event-img">Изображение мероприятия</div>
+                    <div class="event-content">
+                        <h3 class="event-title">Пример мероприятия</h3>
+                        <p class="event-description">Заполните форму слева, чтобы создать свою карточку мероприятия. После заполнения всех полей нажмите кнопку "Сгенерировать карточку".</p>
+                        <a href="#" class="btn event-btn">Принять участие</a>
+                    </div>
                 </div>
             </div>
         </div>

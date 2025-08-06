@@ -121,9 +121,6 @@
                                 {% endif %}
                             </button>
                         </form>
-                        <!--<a href="{{ url_for('edit_registration_form', event_name=event_name) }}" class="btn">
-                            Изменить форму регистрации
-                        </a>-->
                     </div>
                 </div>
 
@@ -135,15 +132,6 @@
                         </span>
                         Участники ({{ event['Number of participants'] }})
                     </h2>
-
-                    <!--
-                    <div class="add-participant-form">
-                        <form method="POST" action="{{ url_for('add_participant', event_name=event_name) }}">
-                            <label for="user_id">Добавить участника по ID:</label>
-                            <input type="text" id="user_id" name="user_id" required>
-                            <button type="submit" class="btn">Добавить</button>
-                        </form>
-                    </div>-->
 
                     <div class="participant-list" id="participantList">
                         {% for participant_id, participant in participants %}

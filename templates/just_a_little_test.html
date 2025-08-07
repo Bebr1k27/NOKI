@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <center>
+        <h1>Попытка выгрузки бд в облако</h1>
+        <p id="result">Результат: </p>
+    </center>
+    <center style="margin-top: 200px;">
+        <ul>
+            <li>"Ok": Синхронизация данных пользователей работает нормально</li>
+            <li>"UnauthorizedError": Токен Яндекс Диска устарел</li>
+            <li>" 'utf-8' codec can't decode byte": Всё грустно</li>
+            <li>"database disk image is malformed": Бд повреждена. Всё вдвойне грустно</li>
+        </ul>
+    </center>
+    <script>
+        const Http = new XMLHttpRequest();
+        const url='/test-handler';
+        Http.open("GET", url);
+        Http.send();
+        let element = document.getElementById('result');
+
+        Http.onreadystatechange = (e) => {
+          console.log(Http.responseText);  // => получим массив данных в формате JSON
+          element.innerText = 'Результат: ' + Http.responseText;
+        }
+    </script>
+</body>
+</html>

@@ -69,6 +69,23 @@ class YaDiskSimple:
         response = requests.put(upload_url, data=content)
         response.raise_for_status()
 
+    def read_binary(self, path):
+        """
+        Чтение бинарных данных файла
+        """
+        download_url = self._request("GET", f"/download?path={path}")["href"]
+        response = requests.get(download_url)
+        response.raise_for_status()
+        return response.content
+
+    def write_binary(self, path, content):
+        """
+        Запись бинарных данных в файл
+        """
+        upload_url = self._request("GET", f"/upload?path={path}&overwrite=true")["href"]
+        response = requests.put(upload_url, data=content)
+        response.raise_for_status()
+
     def listdir(self, path):
         """Список файлов в директории"""
         if not self.exists(path):

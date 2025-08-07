@@ -1,12 +1,28 @@
 import json
 from datetime import date, datetime
 import os
+# from yandex_disk import YaDisk
+from YaDiskSimple import YaDiskSimple
+
+YANDEX_DISK_TOKEN = "y0__xCxqPDJBBjblgMg88ih-xNY1ffexuc3lXpAirNbk33ksz-D3Q" # os.getenv("YANDEX_DISK_TOKEN"), к релизу заменить
+print(YANDEX_DISK_TOKEN)
+# disk = YaDisk(token=YANDEX_DISK_TOKEN)
+disk = YaDiskSimple(YANDEX_DISK_TOKEN)
+BASE_DISK_PATH = "/app_data"
+
+if not disk.exists(BASE_DISK_PATH):
+    disk.mkdir(BASE_DISK_PATH)
+
+ACTIVITIES_PATH = f"{BASE_DISK_PATH}/activities"
+SHOWN_ACTIVITIES_PATH = f"{BASE_DISK_PATH}/shown_activities.json"
 
 def write_activity(name: str, user_id: int | str, user_data: dict):
     try:
-        f = open(f"activities/{name}.json", "r")
-        data = json.load(f)
-        f.close()
+        # f = open(f"activities/{name}.json", "r")
+        # data = json.load(f)
+        # f.close()
+        content = disk.read_file(f"{ACTIVITIES_PATH}/{name}.json")
+        data = json.loads(content)
         if not data["Registration is open"]:
             raise Exception("Registration is closed")
         if str(user_id) in data:
@@ -15,31 +31,37 @@ def write_activity(name: str, user_id: int | str, user_data: dict):
         data[user_id] = user_data
         data[user_id]["date"] = str(date.today())
         data["Number of participants"] += 1
-        f = open(f"activities/{name}.json", "w")
-        json.dump(data, f)
-        f.close()
+        # f = open(f"activities/{name}.json", "w")
+        # json.dump(data, f)
+        # f.close()
+        disk.write_file(f"{ACTIVITIES_PATH}/{name}.json", json.dumps(data))
     except Exception as e:
         print("Something went wrong")
         print(f"Err: {e}")
 
 def close_activity(name: str):
     try:
-        f = open(f"activities/{name}.json", "r")
-        data = json.load(f)
-        f.close()
+        # f = open(f"activities/{name}.json", "r")
+        # data = json.load(f)
+        # f.close()
+        content = disk.read_file(f"{ACTIVITIES_PATH}/{name}.json")
+        data = json.loads(content)
         data["Registration is open"] = False
-        f = open(f"activities/{name}.json", "w")
-        json.dump(data, f)
-        f.close()
+        # f = open(f"activities/{name}.json", "w")
+        # json.dump(data, f)
+        # f.close()
+        disk.write_file(f"{ACTIVITIES_PATH}/{name}.json", json.dumps(data))
     except Exception as e:
         print("Something went wrong")
         print(f"Err: {e}")
 
 def open_activity(name: str):
     try:
-        f = open(f"activities/{name}.json", "r")
-        data = json.load(f)
-        f.close()
+        # f = open(f"activities/{name}.json", "r")
+        # data = json.load(f)
+        # f.close()
+        content = disk.read_file(f"{ACTIVITIES_PATH}/{name}.json")
+        data = json.loads(content)
         data["Registration is open"] = True
         f = open(f"activities/{name}.json", "w")
         json.dump(data, f)
@@ -63,8 +85,10 @@ def get_user_activities(user_id):
         if filename.endswith('.json'):
             filepath = os.path.join(activities_dir, filename)
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    event_data = json.load(f)
+                # with open(filepath, 'r', encoding='utf-8') as f:
+                with disk.read_file(filepath) as content:
+                    event_data = json.loads(content)
+                    # event_data = json.load(f)
 
                     # Проверяем наличие пользователя в мероприятии
                     user_key = str(user_id)

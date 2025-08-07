@@ -36,24 +36,25 @@ def sync_database(direction='download'):
         if direction == 'download':
             if disk.exists(CLOUD_DB_PATH):
                 # Скачиваем облачную версию базы
-                content = disk.read_file(CLOUD_DB_PATH)
+                content = disk.read_binary(CLOUD_DB_PATH)
                 with open(LOCAL_DB_PATH, 'wb') as f:
-                    f.write(content.encode('utf-8'))
+                    f.write(content)
                 print(f"База данных скачана с Яндекс.Диска: {CLOUD_DB_PATH}")
         elif direction == 'upload':
             if os.path.exists(LOCAL_DB_PATH):
                 # Загружаем локальную базу в облако
                 with open(LOCAL_DB_PATH, 'rb') as f:
-                    content = f.read().decode('utf-8')
+                    content = f.read()
                 disk.write_file(CLOUD_DB_PATH, content)
                 print(f"База данных загружена на Яндекс.Диск: {CLOUD_DB_PATH}")
     except Exception as e:
         print(f"Ошибка синхронизации базы данных: {str(e)}")
+        return str(e)
+    return "Ok"
 
 
 # Синхронизация при старте
 sync_database('download')
-
 
 # Настройка автоматической синхронизации при завершении
 def on_exit():
@@ -77,7 +78,7 @@ sync_thread.daemon = True
 sync_thread.start()
 
 # Конфигурация SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{LOCAL_DB_PATH}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{LOCAL_DB_PATH}?charset=utf8'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -176,10 +177,35 @@ class User(db.Model):
         born = self.birthdate
         return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
+def check_db_integrity(db_path):
+    if not os.path.exists(db_path):
+        return False
 
-# Создаем таблицы
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA integrity_check")
+        result = cursor.fetchone()
+        conn.close()
+        return result[0] == "ok"
+    except:
+        return False
+
+
+# Перед созданием таблиц
 with app.app_context():
-    db.create_all()
+    # Проверяем целостность базы
+    if os.path.exists(LOCAL_DB_PATH) and not check_db_integrity(LOCAL_DB_PATH):
+        print("Обнаружена поврежденная база данных. Удаляю...")
+        os.remove(LOCAL_DB_PATH)
+
+    # Создаем новую базу при необходимости
+    if not os.path.exists(LOCAL_DB_PATH):
+        print("Создание новой базы данных...")
+        db.create_all()
+    else:
+        # Проводим миграции
+        migrate.init_app(app, db)
 
 
 @app.route("/login_style.css")
@@ -702,6 +728,13 @@ def manual_sync():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route("/test")
+def test():
+    return render_template("just_a_little_test.html")
+
+@app.route("/test-handler")
+def test_handler():
+    return sync_database('upload')
 
 if __name__ == '__main__':
     app.run(debug=True)
